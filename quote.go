@@ -21,7 +21,11 @@ type Quote struct {
 	Tags       []string `json:"tags"`
 }
 
-func GetQuote() (*Quote, error) {
+type QuotableClient struct {
+	URL
+}
+
+func (q *QuotableClient) GetQuote() (*Quote, error) {
 	url := "https://api.quotable.io/quotes/random?tags=famous-quotes&limit=1"
 	client := http.Client{}
 
@@ -49,4 +53,8 @@ func GetQuote() (*Quote, error) {
 	}
 
 	return &quotes[0], nil
+}
+
+func (q *QuotableClient) GetQuotes() ([]Quote, error) {
+
 }
