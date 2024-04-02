@@ -38,6 +38,16 @@ func main() {
 		return ctx.Send(startMsg)
 	})
 
+	b.Handle("/quote", func(ctx telebot.Context) error {
+		quote, err := GetQuote()
+		if err != nil {
+			return ctx.Send("An error occured while trying to load the quote ...")
+		}
+
+		quoteMsg := fmt.Sprintf("%s\n\n - %s", quote.Content, quote.Author)
+		return ctx.Send(quoteMsg)
+	})
+
 	fmt.Print("Starting quote bot...")
 	b.Start()
 }
