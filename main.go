@@ -50,6 +50,7 @@ func main() {
 	bot.Handle("/start", app.StartCommand)
 	bot.Handle("/quote", app.QuoteCommand)
 	bot.Handle("/categories", app.ListCategoriesCommand)
+	bot.Handle("/search", app.SearchCommand)
 
 	fmt.Print("Starting quote bot...")
 	bot.Start()

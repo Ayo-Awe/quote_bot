@@ -23,7 +23,7 @@ func (a *Application) QuoteCommand(ctx telebot.Context) error {
 	if err != nil {
 		errMsg := "An error occured while trying to load quote ..."
 
-		if errors.Is(err, quote.ErrNoQuote) {
+		if errors.Is(err, quote.ErrQuoteNotFound) {
 			errMsg = "I couldn't find a quote that matches the specified category"
 		}
 
@@ -51,4 +51,23 @@ func (a *Application) ListCategoriesCommand(ctx telebot.Context) error {
 	}
 
 	return ctx.Send(buf.String())
+}
+
+func (a *Application) SearchCommand(ctx telebot.Context) error {
+	q, err := a.QuoteProvider.Search(ctx.Message().Payload)
+
+	if err != nil {
+		errMsg := "An error occured while trying to search..."
+		if errors.Is(err, quote.ErrQuoteNotFound) {
+			errMsg = "No matching quote found"
+		}
+		return ctx.Send(errMsg)
+	}
+
+	if err = ctx.Send("Found a matching quote"); err != nil {
+		return err
+	}
+
+	quoteMsg := fmt.Sprintf("%s\n\n - %s", q.Content, q.Author)
+	return ctx.Send(quoteMsg)
 }
