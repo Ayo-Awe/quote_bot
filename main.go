@@ -4,6 +4,7 @@ import (
 	"flag"
 	"fmt"
 	"log"
+	"strings"
 
 	"gopkg.in/telebot.v3"
 	"gopkg.in/telebot.v3/middleware"
@@ -17,11 +18,14 @@ func main() {
 
 	flag.Parse()
 
+	addr := fmt.Sprintf(":%d", *port)
+	publicUrl := fmt.Sprintf("%s/%s", strings.TrimSuffix(*webhookUrl, "/"), *token)
+
 	poller := &telebot.Webhook{
 		Endpoint: &telebot.WebhookEndpoint{
-			PublicURL: *webhookUrl,
+			PublicURL: publicUrl,
 		},
-		Listen: fmt.Sprintf(":%d", *port),
+		Listen: addr,
 	}
 
 	teleConfig := telebot.Settings{
