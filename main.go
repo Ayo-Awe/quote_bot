@@ -3,9 +3,9 @@ package main
 import (
 	"flag"
 	"fmt"
-	"go-telebot/quote"
 	"log"
 
+	"github.com/ayo-awe/quote_bot/quote"
 	"gopkg.in/telebot.v3"
 )
 
