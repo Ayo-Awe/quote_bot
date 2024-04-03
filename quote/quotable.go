@@ -62,7 +62,7 @@ func (q *quotableProvider) GetQuote(category string) (*Quote, error) {
 
 func (q *quotableProvider) GetQuotes(params QuoteParams) ([]Quote, error) {
 
-	url := fmt.Sprintf("%s/quotes/random?tags=%s&limit=%d", q.BaseURL, params.Category, params.Limit)
+	url := fmt.Sprintf("%s/quotes/random?tags=%s&limit=%d", q.BaseURL, url.QueryEscape(params.Category), params.Limit)
 
 	res, err := q.client.Get(url)
 	if err != nil {
