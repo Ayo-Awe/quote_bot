@@ -81,3 +81,29 @@ func (q *quotableProvider) GetQuotes(params QuoteParams) ([]Quote, error) {
 
 	return quotes, nil
 }
+
+func (q *quotableProvider) GetCategories() ([]Category, error) {
+	url := fmt.Sprintf("%s/tags", q.BaseURL)
+
+	res, err := q.client.Get(url)
+	if err != nil {
+		return nil, err
+	}
+
+	if res.StatusCode >= 400 {
+		return nil, ErrCategoryFetchFailed
+	}
+
+	resBody, err := io.ReadAll(res.Body)
+	if err != nil {
+		return nil, err
+	}
+
+	var categories []Category
+	err = json.Unmarshal(resBody, &categories)
+	if err != nil {
+		return nil, err
+	}
+
+	return categories, nil
+}

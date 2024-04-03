@@ -5,8 +5,9 @@ import (
 )
 
 var (
-	ErrNoQuote          = errors.New("no matching quote found")
-	ErrQuoteFetchFailed = errors.New("couldn't fetch quote")
+	ErrNoQuote             = errors.New("no matching quote found")
+	ErrQuoteFetchFailed    = errors.New("couldn't fetch quote")
+	ErrCategoryFetchFailed = errors.New("couldn't fetch categories")
 )
 
 type QuoteParams struct {
@@ -17,6 +18,7 @@ type QuoteParams struct {
 type QuoteProvider interface {
 	GetQuote(category string) (*Quote, error)
 	GetQuotes(params QuoteParams) ([]Quote, error)
+	GetCategories() ([]Category, error)
 }
 
 type Quote struct {
@@ -24,4 +26,9 @@ type Quote struct {
 	Content    string   `json:"content"`
 	Author     string   `json:"author"`
 	Categories []string `json:"categories"`
+}
+
+type Category struct {
+	ID   string `json:"id"`
+	Name string `json:"name"`
 }

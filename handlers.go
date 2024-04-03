@@ -1,9 +1,11 @@
 package main
 
 import (
+	"bytes"
 	"errors"
 	"fmt"
 	"strings"
+	"text/template"
 
 	"github.com/ayo-awe/quote_bot/quote"
 	"gopkg.in/telebot.v3"
@@ -30,4 +32,23 @@ func (a *Application) QuoteCommand(ctx telebot.Context) error {
 
 	quoteMsg := fmt.Sprintf("%s\n\n - %s", q.Content, q.Author)
 	return ctx.Send(quoteMsg)
+}
+
+func (a *Application) ListCategoriesCommand(ctx telebot.Context) error {
+	categories, err := a.QuoteProvider.GetCategories()
+	if err != nil {
+		return ctx.Send("An error occured while trying to load categories...")
+	}
+
+	tmp, err := template.New("categories").Parse("Here's a list of all available categories\n\n{{range .}}- {{.Name}}\n{{end}}")
+	if err != nil {
+		return ctx.Send("An error occured while trying to load categories...")
+	}
+
+	buf := bytes.Buffer{}
+	if err = tmp.Execute(&buf, categories); err != nil {
+		return ctx.Send("An error occured while trying to load categories...")
+	}
+
+	return ctx.Send(buf.String())
 }
