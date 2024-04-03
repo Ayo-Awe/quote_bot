@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"strings"
 
 	"gopkg.in/telebot.v3"
 )
@@ -12,7 +13,9 @@ func (a *Application) StartCommand(ctx telebot.Context) error {
 }
 
 func (a *Application) QuoteCommand(ctx telebot.Context) error {
-	quote, err := a.QuoteProvider.GetQuote("")
+	category := strings.TrimSpace(ctx.Message().Payload)
+
+	quote, err := a.QuoteProvider.GetQuote(category)
 	if err != nil {
 		return ctx.Send("An error occured while trying to load the quote ...")
 	}
