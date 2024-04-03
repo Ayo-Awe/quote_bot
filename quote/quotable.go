@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"net/url"
 )
 
 type quotableQuote struct {
@@ -23,6 +24,14 @@ func (q *quotableQuote) ToQuote() Quote {
 		Author:     q.Author,
 		Categories: q.Tags,
 	}
+}
+
+type searchQuotesResponse struct {
+	Count      int             `json:"count"`
+	TotalCount int             `json:"totalCount"`
+	Page       int             `json:"page"`
+	TotalPages int             `json:"totalPages"`
+	Results    []quotableQuote `json:"results"`
 }
 
 type quotableProvider struct {
@@ -45,7 +54,7 @@ func (q *quotableProvider) GetQuote(category string) (*Quote, error) {
 	}
 
 	if len(quotes) < 1 {
-		return nil, ErrNoQuote
+		return nil, ErrQuoteNotFound
 	}
 
 	return &quotes[0], nil
@@ -106,4 +115,37 @@ func (q *quotableProvider) GetCategories() ([]Category, error) {
 	}
 
 	return categories, nil
+}
+
+// Returns a quote that best matches the provided query string
+func (q *quotableProvider) Search(query string) (*Quote, error) {
+	url := fmt.Sprintf("%s/search/quotes?query=%s&limit=1&fields=content", q.BaseURL, url.QueryEscape(query))
+
+	res, err := q.client.Get(url)
+	if err != nil {
+		return nil, err
+	}
+
+	if res.StatusCode >= 400 {
+		return nil, ErrQuoteSearchFailed
+	}
+
+	resBody, err := io.ReadAll(res.Body)
+	if err != nil {
+		return nil, err
+	}
+
+	response := &searchQuotesResponse{}
+	err = json.Unmarshal(resBody, response)
+	if err != nil {
+		return nil, err
+	}
+
+	if len(response.Results) < 1 {
+		return nil, ErrQuoteNotFound
+	}
+
+	quote := response.Results[0].ToQuote()
+
+	return &quote, nil
 }

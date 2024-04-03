@@ -5,9 +5,10 @@ import (
 )
 
 var (
-	ErrNoQuote             = errors.New("no matching quote found")
+	ErrQuoteNotFound       = errors.New("no matching quote found")
 	ErrQuoteFetchFailed    = errors.New("couldn't fetch quote")
 	ErrCategoryFetchFailed = errors.New("couldn't fetch categories")
+	ErrQuoteSearchFailed   = errors.New("couldn't search for quote")
 )
 
 type QuoteParams struct {
@@ -19,6 +20,7 @@ type QuoteProvider interface {
 	GetQuote(category string) (*Quote, error)
 	GetQuotes(params QuoteParams) ([]Quote, error)
 	GetCategories() ([]Category, error)
+	Search(query string) (*Quote, error)
 }
 
 type Quote struct {

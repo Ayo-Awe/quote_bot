@@ -24,3 +24,19 @@ func TestGetQuote(t *testing.T) {
 		require.Contains(t, quote.Categories, "Technology")
 	})
 }
+
+func TestSearchQuote(t *testing.T) {
+	provider := NewQuotableProvider()
+
+	t.Run("should successfully find matching quote", func(t *testing.T) {
+		// Visit https://api.quotable.io/search/quotes?query=every+good+technology+is+basically+magic&fields=content for details
+		expectedQuoteID := "T6AMWsNRE5"
+
+		quote, err := provider.Search("every good technology is basically magic")
+		require.NoError(t, err)
+
+		require.NotEmpty(t, quote)
+		require.Equal(t, quote.ID, expectedQuoteID)
+	})
+
+}
