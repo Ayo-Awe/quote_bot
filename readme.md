@@ -15,8 +15,8 @@ The quotes used by the bot are sourced from [Quotable]("https://github.com/lukeP
 
 - [x] Abstract quote client to simplify switching quotes API
 - [x] Implement a get quote by category feature
-- [ ] List all quote categories
-- [ ] Search for a quote
+- [x] List all quote categories
+- [x] Search for a quote
 - [ ] Daily inspirational quote reminders
 
 ## Deployment
