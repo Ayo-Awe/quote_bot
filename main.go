@@ -6,6 +6,7 @@ import (
 	"log"
 
 	"gopkg.in/telebot.v3"
+	"gopkg.in/telebot.v3/middleware"
 )
 
 func main() {
@@ -32,6 +33,8 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
+
+	b.Use(middleware.Logger())
 
 	b.Handle("/start", func(ctx telebot.Context) error {
 		startMsg := fmt.Sprintf("Hello @%s 👋🏽\nWelcome to the quote bot!!!", ctx.Chat().Username)
