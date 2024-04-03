@@ -1,4 +1,4 @@
-module go-telebot
+module github.com/ayo-awe/quote_bot
 
 go 1.22.1
 

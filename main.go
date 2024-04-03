@@ -6,9 +6,14 @@ import (
 	"log"
 	"strings"
 
+	"github.com/ayo-awe/quote_bot/quote"
 	"gopkg.in/telebot.v3"
 	"gopkg.in/telebot.v3/middleware"
 )
+
+type Application struct {
+	QuoteProvider quote.QuoteProvider
+}
 
 func main() {
 
@@ -40,20 +45,10 @@ func main() {
 
 	b.Use(middleware.Logger())
 
-	b.Handle("/start", func(ctx telebot.Context) error {
-		startMsg := fmt.Sprintf("Hello @%s 👋🏽\nWelcome to the quote bot!!!", ctx.Chat().Username)
-		return ctx.Send(startMsg)
-	})
+	app := &Application{QuoteProvider: quote.NewQuotableProvider()}
 
-	b.Handle("/quote", func(ctx telebot.Context) error {
-		quote, err := GetQuote()
-		if err != nil {
-			return ctx.Send("An error occured while trying to load the quote ...")
-		}
-
-		quoteMsg := fmt.Sprintf("%s\n\n - %s", quote.Content, quote.Author)
-		return ctx.Send(quoteMsg)
-	})
+	b.Handle("/start", app.StartCommand)
+	b.Handle("/quote", app.QuoteCommand)
 
 	fmt.Print("Starting quote bot...")
 	b.Start()
