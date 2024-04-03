@@ -38,18 +38,18 @@ func main() {
 		Poller: poller,
 	}
 
-	b, err := telebot.NewBot(teleConfig)
+	bot, err := telebot.NewBot(teleConfig)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	b.Use(middleware.Logger())
+	bot.Use(middleware.Logger())
 
 	app := &Application{QuoteProvider: quote.NewQuotableProvider()}
 
-	b.Handle("/start", app.StartCommand)
-	b.Handle("/quote", app.QuoteCommand)
+	bot.Handle("/start", app.StartCommand)
+	bot.Handle("/quote", app.QuoteCommand)
 
 	fmt.Print("Starting quote bot...")
-	b.Start()
+	bot.Start()
 }
