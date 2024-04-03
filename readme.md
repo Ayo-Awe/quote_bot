@@ -13,7 +13,7 @@ The quotes used by the bot are sourced from [Quotable]("https://github.com/lukeP
 
 ## Todo
 
-- [ ] Abstract quote client to make switching to a new quotes API simple
+- [x] Abstract quote client to simplify switching quotes API
 - [ ] Implement a get quote by category feature
 
 ## Deployment
